@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="灵智龙虾 PsyClaw — 面向心理学与人文社科的研究智能体：文献、设计、分析、写作与质检。">
+<title>灵智龙虾 PsyClaw — 泛社科研究智能体</title>
+<style>
+  :root {
+    --ground:#fafbfb; --surface:#ffffff; --surface-2:#f3f6f5;
+    --ink:#15211f; --muted:#5c6b68; --faint:#8a9793;
+    --hair:#e7ecea; --hair-strong:#d6dedb;
+    --accent:#0b6d6a; --accent-2:#0a5c59;
+    --accent-soft:rgba(11,109,106,.07);
+    --pass:#2f7d57; --attention:#a9761f;
+    --shadow-sm:0 1px 2px rgba(21,33,31,.04);
+    --shadow:0 1px 3px rgba(21,33,31,.04), 0 14px 40px -26px rgba(21,33,31,.20);
+    --maxw:1140px;
+    --user-fg:#ffffff;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC","Hiragino Sans GB",sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:#0a0f0e; --surface:#101817; --surface-2:#15201d;
+      --ink:#e9efec; --muted:#93a29e; --faint:#6c807b;
+      --hair:#1c2926; --hair-strong:#293733;
+      --accent:#37c4b9; --accent-2:#5bd3c9;
+      --accent-soft:rgba(55,196,185,.11);
+      --pass:#54b181; --attention:#d9a441;
+      --user-fg:#06100f;
+      --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+      --shadow:0 1px 3px rgba(0,0,0,.5), 0 22px 50px -30px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0a0f0e; --surface:#101817; --surface-2:#15201d;
+    --ink:#e9efec; --muted:#93a29e; --faint:#6c807b;
+    --hair:#1c2926; --hair-strong:#293733;
+    --accent:#37c4b9; --accent-2:#5bd3c9;
+    --accent-soft:rgba(55,196,185,.11);
+    --pass:#54b181; --attention:#d9a441;
+    --user-fg:#06100f;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+    --shadow:0 1px 3px rgba(0,0,0,.5), 0 22px 50px -30px rgba(0,0,0,.8);
+  }
+  :root[data-theme="light"] {
+    --ground:#fafbfb; --surface:#ffffff; --surface-2:#f3f6f5;
+    --ink:#15211f; --muted:#5c6b68; --faint:#8a9793;
+    --hair:#e7ecea; --hair-strong:#d6dedb;
+    --accent:#0b6d6a; --accent-2:#0a5c59;
+    --accent-soft:rgba(11,109,106,.07);
+    --pass:#2f7d57; --attention:#a9761f;
+    --user-fg:#ffffff;
+    --shadow-sm:0 1px 2px rgba(21,33,31,.04);
+    --shadow:0 1px 3px rgba(21,33,31,.04), 0 14px 40px -26px rgba(21,33,31,.20);
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+  body { margin:0; background:var(--ground); color:var(--ink); font-family:var(--sans);
+    line-height:1.62; font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+  @media (max-width:640px){ .wrap { padding:0 20px; } }
+  a { color:inherit; }
+  ::selection { background:var(--accent-soft); color:var(--ink); }
+  .eyebrow { font-family:var(--mono); font-size:.71rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--accent); font-weight:600; display:inline-flex; align-items:center; gap:.6em; }
+  .eyebrow .p { opacity:.55; }
+  h2 { font-size:clamp(1.55rem,3vw,2.15rem); line-height:1.16; letter-spacing:-.017em;
+       margin:.55rem 0 .5rem; text-wrap:balance; font-weight:640; }
+  .lead { color:var(--muted); font-size:1.06rem; max-width:62ch; line-height:1.6; }
+  .lead b { color:var(--ink); font-weight:600; }
+  section { padding:clamp(60px,8.5vw,110px) 0; border-top:1px solid var(--hair); }
+  .num { font-variant-numeric:tabular-nums; }
+  .ic { font-family:var(--mono); font-size:.79rem; color:var(--accent); background:var(--accent-soft);
+    padding:.13em .5em; border-radius:5px; }
+  header.bar { position:sticky; top:0; z-index:30; backdrop-filter:saturate(1.3) blur(14px);
+    -webkit-backdrop-filter:saturate(1.3) blur(14px);
+    background:color-mix(in srgb, var(--ground) 78%, transparent); border-bottom:1px solid var(--hair); }
+  .bar .wrap { display:flex; align-items:center; justify-content:space-between; height:62px; }
+  .brand { font-family:var(--mono); font-weight:650; letter-spacing:-.01em; display:flex; align-items:center; gap:.55ch; font-size:.96rem; }
+  .brand .caret { color:var(--accent); font-weight:700; }
+  .bar nav { display:flex; align-items:center; gap:24px; }
+  .bar nav a { font-size:.86rem; color:var(--muted); text-decoration:none; transition:color .15s; }
+  .bar nav a:hover { color:var(--ink); }
+  .toggle { font-family:var(--mono); font-size:.76rem; color:var(--muted); background:transparent;
+    border:1px solid var(--hair-strong); border-radius:7px; padding:6px 11px; cursor:pointer; letter-spacing:.02em; transition:all .15s; }
+  .toggle:hover { border-color:var(--accent); color:var(--accent); }
+  @media (max-width:760px){ .bar nav .lnk { display:none; } }
+  .hero { padding:clamp(70px,10vw,120px) 0 clamp(46px,6vw,74px); border-top:0; }
+  .hero .grid { display:grid; grid-template-columns:1.04fr .96fr; gap:clamp(30px,4.5vw,64px); align-items:center; }
+  @media (max-width:920px){ .hero .grid { grid-template-columns:1fr; gap:38px; } }
+  .brand-cycle { position:relative; display:grid; margin:.75rem 0 .05rem; font-size:clamp(2.35rem,6.5vw,4.5rem);
+    line-height:1.08; font-weight:720; letter-spacing:.01em; min-height:1.18em; }
+  .brand-slide { grid-area:1/1; display:flex; align-items:baseline; gap:.24em; opacity:0; transform:translateY(8px);
+    transition:opacity .45s ease, transform .45s ease; pointer-events:none; }
+  .brand-slide.active { opacity:1; transform:none; }
+  .brand-slide .cnname { color:var(--ink); }
+  .brand-slide .enname { color:var(--accent); font-family:var(--mono); letter-spacing:-.045em; }
+  .brand-slide .branddot { color:var(--accent); font-weight:500; }
+  .brand-slide .tagline { color:var(--accent); font-size:.28em; font-weight:620; letter-spacing:.12em; margin:0 0 .08em; }
+  @media (prefers-reduced-motion: reduce){ .brand-slide { transition:none; } .brand-slide:not(:first-child) { display:none; } }
+  .hero h1 { font-size:clamp(1.3rem,3vw,1.85rem); line-height:1.24; font-weight:560; letter-spacing:-.012em;
+    margin:.55rem 0 .8rem; text-wrap:balance; max-width:21ch; color:var(--ink); }
+  .hero h1 em { font-style:normal; color:var(--accent); background:linear-gradient(transparent 62%, var(--accent-soft) 62%); padding:0 .05em; }
+  .hero p.thesis { color:var(--muted); max-width:50ch; font-size:1.06rem; line-height:1.62; }
+  .hero p.thesis b { color:var(--ink); font-weight:600; }
+  .cta-row { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+  .btn { font-size:.9rem; text-decoration:none; padding:12px 20px; border-radius:9px; display:inline-flex;
+    align-items:center; gap:.55ch; border:1px solid transparent; font-weight:520;
+    transition:transform .13s ease, background .2s, border-color .2s, color .2s; }
+  .btn .m { font-family:var(--mono); }
+  .btn.primary { background:var(--accent); color:var(--user-fg); font-weight:560; }
+  .btn.primary:hover { transform:translateY(-1px); background:var(--accent-2); }
+  .btn.ghost { border-color:var(--hair-strong); color:var(--ink); background:var(--surface); }
+  .btn.ghost:hover { border-color:var(--accent); color:var(--accent); }
+  .downloads { display:grid; grid-template-columns:1.15fr .85fr; gap:18px; margin-top:32px; }
+  .download { padding:23px 22px; }
+  .download h3 { margin:0 0 .35rem; font-size:1.02rem; font-weight:620; }
+  .download p { margin:0; color:var(--muted); font-size:.9rem; line-height:1.55; }
+  .download .actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:17px; }
+  .download .actions .btn { padding:9px 13px; font-size:.82rem; }
+  .download code { display:inline-block; margin-top:13px; padding:8px 10px; border-radius:6px;
+    background:var(--surface-2); color:var(--muted); font: .76rem/1.45 var(--mono); overflow-wrap:anywhere; }
+  @media (max-width:760px){ .downloads { grid-template-columns:1fr; } }
+  .term { background:var(--surface); border:1px solid var(--hair); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; font-family:var(--mono); }
+  .term .top { display:flex; align-items:center; gap:8px; padding:12px 15px; border-bottom:1px solid var(--hair); background:var(--surface-2); }
+  .term .top .dot { width:9px; height:9px; border-radius:50%; background:var(--hair-strong); }
+  .term .top .name { margin-left:8px; font-size:.72rem; color:var(--faint); letter-spacing:.03em; }
+  .term .body { padding:17px 17px 19px; font-size:.81rem; line-height:1.82; overflow-x:auto; }
+  .term .ln { white-space:pre; }
+  .term .cmd .u { color:var(--accent); font-weight:600; }
+  .term .cmd { color:var(--ink); }
+  .term .out { color:var(--muted); }
+  .term .out .ok { color:var(--pass); font-weight:600; }
+  .term .out .hl { color:var(--ink); }
+  .term .cm { color:var(--faint); }
+  .cursor { display:inline-block; width:.55ch; height:1.02em; vertical-align:-.15em; background:var(--accent); margin-left:1px; animation:blink 1.05s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  @media (prefers-reduced-motion: reduce){ .cursor{ animation:none; } }
+  .modes { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:34px; }
+  @media (max-width:800px){ .modes { grid-template-columns:1fr; } }
+  .card { background:var(--surface); border:1px solid var(--hair); border-radius:14px; box-shadow:var(--shadow-sm); transition:border-color .2s, transform .2s, box-shadow .2s; }
+  .card:hover { border-color:var(--hair-strong); transform:translateY(-2px); box-shadow:var(--shadow); }
+  .mode { padding:26px 24px; }
+  .mode .k { font-family:var(--mono); color:var(--accent); font-weight:680; font-size:1.02rem; display:flex; align-items:baseline; gap:.5ch; }
+  .mode .k .who { font-family:var(--sans); font-size:.67rem; color:var(--faint); font-weight:500; letter-spacing:.07em; text-transform:uppercase; margin-left:auto; }
+  .mode h3 { margin:.85rem 0 .4rem; font-size:1.04rem; font-weight:600; letter-spacing:-.01em; }
+  .mode p { margin:0; color:var(--muted); font-size:.92rem; line-height:1.58; }
+  .pipe { margin-top:36px; }
+  .stage { display:grid; grid-template-columns:56px 1fr auto; gap:22px; align-items:start; padding:22px 0; border-top:1px solid var(--hair); position:relative; }
+  .stage:first-child { border-top:0; }
+  .stage .rail { position:absolute; left:21px; top:0; bottom:0; width:1px; background:var(--hair); z-index:0; }
+  .stage:first-child .rail { top:34px; }
+  .stage:last-child .rail { bottom:auto; height:34px; }
+  .stage .idx { font-family:var(--mono); font-size:.8rem; font-weight:680; color:var(--accent); width:44px; height:44px;
+    display:grid; place-items:center; border-radius:11px; border:1px solid var(--hair-strong); background:var(--surface); position:relative; z-index:2; box-shadow:var(--shadow-sm); }
+  .stage .mid .t { font-weight:620; font-size:1.06rem; letter-spacing:-.008em; }
+  .stage .mid .t small { font-family:var(--mono); color:var(--faint); font-weight:500; font-size:.7rem; letter-spacing:.05em; margin-left:.7ch; text-transform:uppercase; }
+  .stage .mid .d { color:var(--muted); font-size:.93rem; margin-top:.25rem; max-width:56ch; line-height:1.55; }
+  .stage .mid .d b { color:var(--ink); font-weight:600; }
+  .gate { font-family:var(--mono); font-size:.71rem; white-space:nowrap; align-self:center; color:var(--pass);
+    border:1px solid color-mix(in srgb, var(--pass) 32%, transparent); background:color-mix(in srgb, var(--pass) 8%, transparent);
+    padding:6px 11px; border-radius:20px; letter-spacing:.015em; font-weight:500; }
+  .gate .g { opacity:.6; }
+  @media (max-width:760px){ .stage { grid-template-columns:44px 1fr; gap:18px; } .stage .rail { left:21px; } .stage .gate { grid-column:2; justify-self:start; margin-top:10px; } }
+  .demo { margin-top:34px; }
+  .tabs { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:20px; }
+  .tab { font-family:var(--mono); font-size:.8rem; padding:9px 15px; border-radius:9px; border:1px solid var(--hair-strong);
+    background:var(--surface); color:var(--muted); cursor:pointer; transition:all .15s; letter-spacing:.01em; }
+  .tab:hover { color:var(--ink); border-color:var(--accent); }
+  .tab.active { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); font-weight:600; }
+  .chat { background:var(--surface); border:1px solid var(--hair); border-radius:16px; box-shadow:var(--shadow); overflow:hidden; }
+  .chat .head { display:flex; align-items:center; gap:8px; padding:13px 18px; border-bottom:1px solid var(--hair); background:var(--surface-2); }
+  .chat .head .dot { width:9px; height:9px; border-radius:50%; background:var(--hair-strong); }
+  .chat .head .name { margin-left:8px; font-family:var(--mono); font-size:.73rem; color:var(--faint); letter-spacing:.03em; }
+  .scene { padding:24px 22px 26px; display:flex; flex-direction:column; gap:16px; }
+  .scene[hidden] { display:none; }
+  .msg { display:flex; gap:11px; align-items:flex-start; }
+  .msg.user { justify-content:flex-end; }
+  .msg .who { font-family:var(--mono); font-weight:700; color:var(--accent); font-size:.85rem; flex:0 0 auto; padding-top:9px; opacity:.85; }
+  .b { padding:12px 16px; border-radius:15px; font-size:.945rem; line-height:1.62; max-width:82%; }
+  .msg.bot .b { background:var(--surface-2); border:1px solid var(--hair); color:var(--ink); border-top-left-radius:5px; }
+  .msg.user .b { background:var(--accent); color:var(--user-fg); border-top-right-radius:5px; font-weight:450; }
+  .b code { font-family:var(--mono); font-size:.85em; padding:.08em .4em; border-radius:5px; }
+  .msg.bot .b code { color:var(--accent); background:var(--accent-soft); }
+  .msg.user .b code { color:var(--user-fg); background:rgba(255,255,255,.16); }
+  .b .ok { color:var(--pass); font-weight:600; }
+  .msg.bot .b b { color:var(--ink); font-weight:640; }
+  .b .warn { color:var(--attention); font-weight:600; }
+  @media (max-width:560px){ .b { max-width:88%; } .msg .who { display:none; } }
+  .more { margin-top:20px; color:var(--muted); font-size:.92rem; }
+  .more b { color:var(--ink); font-weight:600; }
+  .principles { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:36px; }
+  @media (max-width:900px){ .principles { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .principles { grid-template-columns:1fr; } }
+  .pr { padding:24px 22px; }
+  .pr .tag { font-family:var(--mono); font-size:.66rem; letter-spacing:.11em; text-transform:uppercase; color:var(--accent); }
+  .pr h3 { margin:.55rem 0 0; font-size:1.06rem; font-weight:620; letter-spacing:-.01em; }
+  .pr p { color:var(--muted); font-size:.91rem; margin:.6rem 0 0; line-height:1.56; }
+  .pr p b { color:var(--ink); font-weight:600; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--hair); border:1px solid var(--hair);
+    border-radius:14px; overflow:hidden; margin-top:44px; box-shadow:var(--shadow-sm); }
+  @media (max-width:640px){ .stats { grid-template-columns:repeat(2,1fr); } }
+  .stat { background:var(--surface); padding:26px 22px; }
+  .stat .v { font-family:var(--mono); font-size:1.85rem; font-weight:680; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1; }
+  .stat .l { color:var(--muted); font-size:.8rem; margin-top:.5rem; }
+  footer { border-top:1px solid var(--hair); padding:44px 0 60px; color:var(--muted); }
+  footer .row { display:flex; flex-wrap:wrap; gap:18px 32px; align-items:center; justify-content:space-between; }
+  footer .brand { color:var(--ink); font-family:var(--mono); font-weight:650; }
+  footer .brand .caret { color:var(--accent); font-weight:700; }
+  footer .meta { font-family:var(--mono); font-size:.77rem; display:flex; flex-wrap:wrap; gap:8px 16px; color:var(--faint); }
+  footer .meta .sep { opacity:.5; }
+  footer a.gh { color:var(--accent); text-decoration:none; font-family:var(--mono); font-size:.82rem; }
+  footer a.gh:hover { text-decoration:underline; }
+  .reveal { opacity:0; transform:translateY(16px); transition:opacity .65s cubic-bezier(.2,.6,.2,1), transform .65s cubic-bezier(.2,.6,.2,1); }
+  .reveal.in { opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){ .reveal { opacity:1; transform:none; transition:none; } }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:5px; }
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand"><span class="caret">&gt;_</span>&nbsp;灵智龙虾 · PsyClaw</div>
+    <nav>
+      <a class="lnk" href="#download">下载</a>
+      <a class="lnk" href="#mental">心智模型</a>
+      <a class="lnk" href="#pipeline">研究流水线</a>
+      <a class="lnk" href="#guide">对话示例</a>
+      <a class="lnk" href="#principles">设计哲学</a>
+      <button class="toggle" id="themeBtn" aria-label="切换明暗主题">◐&nbsp;theme</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="grid">
+        <div>
+          <span class="eyebrow"><span class="p">&gt;_</span> 国产自主研发 · social science agent</span>
+          <div class="brand-cycle" aria-label="灵智龙虾 PsyClaw" data-brand-cycle>
+            <div class="brand-slide active"><span class="cnname">灵智龙虾</span><span class="branddot">·</span><span class="tagline">用心分析</span></div>
+            <div class="brand-slide"><span class="enname">PsyClaw</span><span class="branddot">·</span><span class="tagline">用心分析</span></div>
+          </div>
+          <h1>面向心理学，兼顾其他人文社科的<em>分析与写作</em>。</h1>
+          <p class="thesis">灵智龙虾是国产自主研发的研究智能体。像跟研究助理说话一样，陪你把问题走完「从文献到可复现产物」的全程：检索、设计、分析、写作与质检。统计交给成熟工具，PsyClaw 守着流程、规范、记忆与质量门。</p>
+          <div class="cta-row">
+            <a class="btn primary" href="#download"><span class="m">↓</span>&nbsp;立即下载</a>
+            <a class="btn primary" href="#guide"><span class="m">&gt;_</span>&nbsp;看对话示例</a>
+            <a class="btn ghost" href="https://github.com/Exekiel179/psyclaw" target="_blank" rel="noopener">GitHub&nbsp;↗</a>
+          </div>
+        </div>
+        <div class="term">
+          <div class="top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="name">psyclaw · deepseek</span></div>
+          <div class="body" id="termBody">
+            <div class="ln cmd" id="typeLine"><span class="u">$</span> </div>
+            <div class="rest" style="display:none">
+<div class="ln out">  <span class="ok">✓</span> 新分析已建 → <span class="hl">公正世界信念研究/</span></div>
+<div class="ln cmd"><span class="u">psyclaw ❯</span> 帮我出个检索计划</div>
+<div class="ln out">  <span class="ok">✓</span> 中英布尔式 + 纳排标准 → <span class="hl">notes/search_plan.md</span></div>
+<div class="ln cmd"><span class="u">psyclaw ❯</span> @data/clean/bjw.csv 跑相关和回归</div>
+<div class="ln out">  → <span class="hl">outputs/report.md</span>  <span class="cm">效应量 + 95% CI · 委托 pingouin</span></div>
+<div class="ln cmd"><span class="u">psyclaw ❯</span> 导成 APA 的 Word</div>
+<div class="ln out">  → APA7 Word <span class="cm">中文字体 · 图真嵌入</span></div>
+<div class="ln cmd"><span class="u">psyclaw ❯</span> 能投稿吗</div>
+<div class="ln out">  <span class="ok">✓</span> JARS · 引用保真 · 溯源 — <span class="hl">门禁全过</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="download">
+    <div class="wrap">
+      <span class="eyebrow"><span class="p">&gt;_</span> get started · 下载灵智龙虾</span>
+      <h2>选你的安装方式</h2>
+      <p class="lead">当前版本 <b>v0.22.0</b>，需要 Python 3.11 或更高版本。安装器会自动配置 PsyClaw 及其运行环境。</p>
+      <div class="downloads">
+        <div class="card download reveal">
+          <h3>macOS / Linux</h3>
+          <p>打开终端执行一条命令，自动安装；国内网络环境会自动切换镜像。</p>
+          <code>curl -fsSL https://exekiel179.github.io/psyclaw/install.sh | sh</code>
+          <div class="actions">
+            <a class="btn primary" href="install.sh" download><span class="m">↓</span>&nbsp;下载安装脚本</a>
+            <a class="btn ghost" href="https://github.com/Exekiel179/psyclaw/releases/tag/v0.22.0" target="_blank" rel="noopener">Release v0.22.0&nbsp;↗</a>
+          </div>
+        </div>
+        <div class="card download reveal">
+          <h3>Windows</h3>
+          <p>在 PowerShell 中运行安装脚本，支持 Windows 10 及以上版本。</p>
+          <code>irm https://exekiel179.github.io/psyclaw/install.ps1 | iex</code>
+          <div class="actions">
+            <a class="btn primary" href="install.ps1" download><span class="m">↓</span>&nbsp;下载安装脚本</a>
+            <a class="btn ghost" href="https://github.com/Exekiel179/psyclaw/archive/refs/tags/v0.22.0.zip" target="_blank" rel="noopener">下载源码 ZIP&nbsp;↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="cta-row">
+        <a class="btn ghost" href="https://github.com/Exekiel179/psyclaw/releases" target="_blank" rel="noopener">全部版本与离线包&nbsp;↗</a>
+        <a class="btn ghost" href="https://github.com/Exekiel179/psyclaw#安装">安装说明与文档&nbsp;↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="mental">
+    <div class="wrap">
+      <span class="eyebrow"><span class="p">&gt;_</span> mental model · 你在跟什么对话</span>
+      <h2>同一个 PsyClaw，三种工作方式</h2>
+      <p class="lead">区别只在一件事：<b>谁来决定下一步</b>。从你主导到它自主，是一条滑杆。多数时候直接 <span class="ic">psyclaw</span> 进对话说人话就行。</p>
+      <div class="modes">
+        <div class="card mode reveal"><div class="k">chat <span class="who">你主导</span></div><h3>边聊边推进</h3><p>讨论 + 工具按需调用、逐条批准。适合探索、还不确定下一步——决定权在你，它给建议。</p></div>
+        <div class="card mode reveal"><div class="k">run <span class="who">明确流程</span></div><h3>一次跑通某类流程</h3><p>说「跑通 analysis / literature / meta / qualitative」，一次执行完、产出落盘。明确知道要做什么时用它。</p></div>
+        <div class="card mode reveal"><div class="k">auto <span class="who">它自主</span></div><h3>Ralph 式自循环</h3><p>读状态 → 选任务 → 执行 → 独立验收 → 记录，循环推进。强制检查与不可逆决策仍会 fail-closed 暂停等你。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pipeline">
+    <div class="wrap">
+      <span class="eyebrow"><span class="p">&gt;_</span> research lifecycle · 它怎么看待「做研究」</span>
+      <h2>七个阶段，每阶段一道门</h2>
+      <p class="lead">一个阶段「完成」的标志不是<b>跑完了</b>，而是<b>过了那道 gate</b>。PsyClaw 在每阶段结束告诉你：过了没、缺什么、下一步该干嘛。</p>
+      <div class="pipe">
+        <div class="stage reveal"><span class="rail"></span><div class="idx">01</div><div class="mid"><div class="t">澄清 <small>clarify</small></div><div class="d">研究问题 → 17 项研究准备清单，逐项 grill 式敲定。</div></div><div class="gate"><span class="g">gate ·</span> 问题明确、变量可测</div></div>
+        <div class="stage reveal"><span class="rail"></span><div class="idx">02</div><div class="mid"><div class="t">设计 <small>design</small></div><div class="d">选设计与分析方法，每个决策给文献背书。</div></div><div class="gate"><span class="g">gate ·</span> 设计能答问题</div></div>
+        <div class="stage reveal"><span class="rail"></span><div class="idx">03</div><div class="mid"><div class="t">预注册 <small>preregister</small></div><div class="d">锁定假设与分析计划，出 OSF / AsPredicted 双格式。</div></div><div class="gate"><span class="g">gate ·</span> 探索 / 确证分明</div></div>
+        <div class="stage reveal"><span class="rail"></span><div class="idx">04</div><div class="mid"><div class="t">文献 <small>literature</small></div><div class="d">检索 → 筛选 → 矩阵 → 综述。公开 API 直检或机构库浏览器桥接。</div></div><div class="gate"><span class="g">gate ·</span> 引用可核实</div></div>
+        <div class="stage reveal"><span class="rail"></span><div class="idx">05</div><div class="mid"><div class="t">分析 <small>analysis</small></div><div class="d">数据质量 → 描述 → 主分析 → 诊断 → 稳健性。<b>统计外移</b>：委托 scipy / pingouin 跑。</div></div><div class="gate"><span class="g">gate ·</span> 效应量 + CI、诊断齐</div></div>
+        <div class="stage reveal"><span class="rail"></span><div class="idx">06</div><div class="mid"><div class="t">写作 <small>writing</small></div><div class="d">结构化草稿 → APA7 Word，中文字体前置、图真嵌入。</div></div><div class="gate"><span class="g">gate ·</span> JARS 报告完整</div></div>
+        <div class="stage reveal"><span class="rail"></span><div class="idx">07</div><div class="mid"><div class="t">质检 <small>check</small></div><div class="d">投稿前一键质检 + 模拟评审（EIC + 三审稿人 + Devil's Advocate）。</div></div><div class="gate"><span class="g">gate ·</span> 门禁全过</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guide">
+    <div class="wrap">
+      <span class="eyebrow"><span class="p">&gt;_</span> how to · 直接说人话</span>
+      <h2>对话示例</h2>
+      <p class="lead">不用记命令、不用记 <span class="ic">--flag</span>——像跟研究助理说话一样告诉它你要什么，命令和文件它自己处理。切换看几个真实场景：</p>
+      <div class="demo">
+        <div class="tabs" role="tablist" id="tabs">
+          <button class="tab active" data-s="0" type="button">开题 · 文献</button>
+          <button class="tab" data-s="1" type="button">数据分析</button>
+          <button class="tab" data-s="2" type="button">写作 · 投稿</button>
+          <button class="tab" data-s="3" type="button">规范守门</button>
+          <button class="tab" data-s="4" type="button">随手请教</button>
+        </div>
+        <div class="chat">
+          <div class="head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="name">psyclaw · 对话</span></div>
+          <div class="scene" data-s="0">
+            <div class="msg user"><div class="b">我想研究公正世界信念对大学生心理健康的影响，帮我起个头。</div></div>
+            <div class="msg bot"><div class="who">&gt;_</div><div class="b">正式开工前我先跟你确认两点，免得后面返工——① 这是<b>探索性</b>研究，还是有明确假设的<b>确证性</b>研究？② 心理健康用哪个量表测（生活满意度 SWLS？抑郁 CES-D？）。定了我帮你建独立分析文件夹、出检索计划。</div></div>
+            <div class="msg user"><div class="b">确证性，结局用 SWLS 和抑郁。</div></div>
+            <div class="msg bot"><div class="who">&gt;_</div><div class="b"><span class="ok">✓</span> 已建 <code>bjw_study/</code>，检索计划写好了（中英布尔式 + 纳入/排除标准 → <code>notes/search_plan.md</code>）。公开学术库我可以直接检索；知网/万方要登录的，我能驱动你已登录的浏览器去检，登录环节你来。先跑哪个？</div></div>
+          </div>
+          <div class="scene" data-s="1" hidden>
+            <div class="msg user"><div class="b">@data/clean/bjw.csv 这份数据能做什么分析？</div></div>
+            <div class="msg bot"><div class="who">&gt;_</div><div class="b">读到了——124 行，变量有组别、PBJW、GBJW、SWLS、抑郁，加年龄/性别。适合做 PBJW / GBJW 对 SWLS 和抑郁的<b>回归</b>，控制人口学变量。统计我不自己算，生成一个委托 <code>pingouin</code> 的脚本跑相关 + 分层回归，报效应量和 95% CI。要现在跑吗？</div></div>
+            <div class="msg user"><div class="b">跑。</div></div>
+            <div class="msg bot"><div class="who">&gt;_</div><div class="b">→ <code>outputs/report.md</code>。PBJW → SWLS <b>β = .34, 95% CI [.18, .50]</b>；正态与方差诊断齐，换 Spearman 复验结论一致。<span class="warn">提醒</span>：这是横断数据，只能说关联，别写成因果。</div></div>
+          </div>
+          <div class="scene" data-s="2" hidden>
+            <div class="msg user"><div class="b">帮我把结果导成 Word，APA 格式，顺便看看能不能投。</div></div>
+            <div class="msg bot"><div class="who">&gt;_</div><div class="b"><span class="ok">✓</span> → <code>outputs/report.apa7.docx</code>：TNR 双倍行距、<b>中文字体前置</b>（不会豆腐块）、两张图真嵌进去、参考文献悬挂缩进。质检也跑了 → JARS 报告完整、效应量 + CI 齐、引用都可核实。<span class="warn">一点提醒</span>：样本量偏小，讨论里建议补一句功效说明再投。</div></div>
+          </div>
+          <div class="scene" data-s="3" hidden>
+            <div class="msg user"><div class="b">我这个结果 p = .048，能说公正世界信念显著提升了幸福感吧？</div></div>
+            <div class="msg bot"><div class="who">&gt;_</div><div class="b">统计上 p &lt; .05 算显著，但两处得改：① 这是横断相关数据，「<b>提升</b>」是因果说法，换成「<b>与幸福感正相关</b>」更准；② 光报 p 不够，要带<b>效应量和置信区间</b>。还有 .048 很贴边界，如实报精确 p 就好——「边缘显著」这类话术我不会帮你写。</div></div>
+          </div>
+          <div class="scene" data-s="4" hidden>
+            <div class="msg user"><div class="b">PHQ-9 多少分算中度抑郁？</div></div>
+            <div class="msg bot"><div class="who">&gt;_</div><div class="b">PHQ-9 总分 0–27，常用切分：5–9 轻度、10–14 中度、15–19 中重度、20+ 重度——所以 <b>10 分起</b>算中度。要我把条目和中国样本常模也调出来吗？</div></div>
+            <div class="msg user"><div class="b">顺便，做中介效应该用什么方法？</div></div>
+            <div class="msg bot"><div class="who">&gt;_</div><div class="b">首选 <b>bootstrap 法</b>（偏差校正，5000 次）算间接效应的置信区间，别只看 Sobel。要做的话我按你的自变量 / 中介 / 因变量生成分析脚本。</div></div>
+          </div>
+        </div>
+        <p class="more">这些都能直接说：<b>量表查询 · 方法建议 · 实验设计 · 预注册 · 投稿评审 · 文献检索</b>——想不起来怎么开口，就一句「<span class="ic">psyclaw start</span>」，它带你走一遍。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="principles">
+    <div class="wrap">
+      <span class="eyebrow"><span class="p">&gt;_</span> design philosophy · 它对自己的约束</span>
+      <h2>克制，是这套工具的性格</h2>
+      <p class="lead">这些不是功能，是刻意的架构选择——决定了 PsyClaw 该做什么、绝不做什么。</p>
+      <div class="principles">
+        <div class="card pr reveal"><span class="tag">externalized</span><h3>统计外移</h3><p>核里<b>不实现任何统计算法</b>。成熟库经同行审查、可复现——生成委托 scipy / pingouin / statsmodels 的脚本，或走 MCP，把「算」交给最合适的工具。</p></div>
+        <div class="card pr reveal"><span class="tag">stdlib core</span><h3>纯 stdlib 核</h3><p>核心<b>零第三方硬依赖</b>，处处能跑。统计、浏览器、文献等重能力全外挂成 MCP，缺失时优雅降级。</p></div>
+        <div class="card pr reveal"><span class="tag">integrity</span><h3>学术诚信不可妥协</h3><p>效应量 + CI 必报、<b>相关 ≠ 因果</b>、区分探索 / 确证、不 p-hacking、不杜撰引用——产出与门禁都照规范把关。</p></div>
+        <div class="card pr reveal"><span class="tag">ralph loop</span><h3>Ralph 自循环</h3><p>auto 模式与开发流程同构：<b>磁盘是记忆、上下文可抛弃</b>，每轮从盘上重推待办、只做一件、拿真实产物验收、记状态、再来。</p></div>
+        <div class="card pr reveal"><span class="tag">memory</span><h3>三层记忆</h3><p>对话上下文 / 会话状态（<span class="ic">notes/</span>，跟文件夹走）/ 长期画像与教训卡。用得越久越懂你，靠相关性路由 + 衰减防上下文膨胀。</p></div>
+        <div class="card pr reveal"><span class="tag">capable</span><h3>能力自知</h3><p>它知道自己有导出、APA7 图表、质检这些现成能力，<b>不重造轮子</b>；手搓 docx / 裸 matplotlib 会被当场纠偏。</p></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="v num">155</div><div class="l">features 全部 done</div></div>
+        <div class="stat"><div class="v num">1983</div><div class="l">tests passing</div></div>
+        <div class="stat"><div class="v">MIT</div><div class="l">开源许可</div></div>
+        <div class="stat"><div class="v">0</div><div class="l">第三方硬依赖（stdlib 核）</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap row">
+    <div class="brand"><span class="caret">&gt;_</span>&nbsp;灵智龙虾 · PsyClaw</div>
+    <div class="meta"><span>用心分析</span><span class="sep">·</span><span>泛社科研究智能体</span><span class="sep">·</span><span>python -m psyclaw</span></div>
+    <a class="gh" href="https://github.com/Exekiel179/psyclaw" target="_blank" rel="noopener">github.com/Exekiel179/psyclaw&nbsp;↗</a>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var root = document.documentElement, btn = document.getElementById('themeBtn');
+    function cur(){ return root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+    btn.addEventListener('click', function(){
+      var next = cur()==='dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      btn.textContent = (next==='dark' ? '☀ ' : '☾ ') + 'theme';
+    });
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+    var scenes = Array.prototype.slice.call(document.querySelectorAll('.scene'));
+    tabs.forEach(function(t){
+      t.addEventListener('click', function(){
+        var s = t.getAttribute('data-s');
+        tabs.forEach(function(x){ x.classList.toggle('active', x===t); });
+        scenes.forEach(function(sc){ if (sc.getAttribute('data-s')===s) sc.removeAttribute('hidden'); else sc.setAttribute('hidden',''); });
+      });
+    });
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var brandSlides = Array.prototype.slice.call(document.querySelectorAll('[data-brand-cycle] .brand-slide'));
+    if (!reduce && brandSlides.length > 1) {
+      var brandIndex = 0;
+      setInterval(function(){
+        brandSlides[brandIndex].classList.remove('active');
+        brandIndex = (brandIndex + 1) % brandSlides.length;
+        brandSlides[brandIndex].classList.add('active');
+      }, 2600);
+    }
+    var line = document.getElementById('typeLine'), rest = document.querySelector('#termBody .rest');
+    var full = '你好,想研究公正世界信念对心理健康的影响';
+    function reveal(){ if(rest) rest.style.display='block'; }
+    if (reduce || !line){ if(line) line.innerHTML = '<span class="u">$</span> ' + full; reveal(); }
+    else {
+      var i=0; line.innerHTML = '<span class="u">$</span> <span class="cursor"></span>';
+      var iv = setInterval(function(){ i++;
+        line.innerHTML = '<span class="u">$</span> ' + full.slice(0,i) + (i<full.length ? '<span class="cursor"></span>' : '');
+        if(i>=full.length){ clearInterval(iv); setTimeout(reveal, 240); }
+      }, 46);
+    }
+    var obs = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } }); }, {threshold:.1});
+    document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+  })();
+</script>
