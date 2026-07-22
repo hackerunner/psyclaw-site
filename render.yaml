@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: psyclaw-site
+    name: psyclaw
     runtime: static
     buildCommand: ""
     staticPublishPath: .
